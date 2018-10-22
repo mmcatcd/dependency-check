@@ -7,6 +7,10 @@
   height: 40vmin;
 }
 
+.searchBar::placeholder {
+  color: #8898AA;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
