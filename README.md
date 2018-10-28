@@ -6,7 +6,7 @@ The server for Dependency Check, a dependency analysis tool.
 
 ### Prerequisites
 
-1. [Nodejs]('https://nodejs.org/en/') installed
+1. [Nodejs](https://nodejs.org/en/) installed
 
 ### Installation process
 
