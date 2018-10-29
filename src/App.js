@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
+import { ApolloProvider } from 'react-apollo';
 
+import { githubClient } from './graphql/GithubClient';
 import Logo from './components/Logo';
 import SearchBar from './components/SearchBar';
 import Colors from './components/Colors';
@@ -46,18 +48,39 @@ const examples = exampleData.map(repo => {
   });
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      searchBar: {
+        isEmpty: true
+      }
+    }
+  }
+
+  searchChange(value) {
+    if (value === "") {
+      this.setState({searchBar: { isEmpty: true }});
+    } else {
+      this.setState({searchBar: { isEmpty: false }});
+    }
+  }
+
   render() {
+    const { isEmpty } = this.state.searchBar;
+
     return (
-      <div className="App">
-        <div style={styles.searchContainer} className="searchContainer">
-          <div style={styles.logoContainer}><Logo /></div>
-          <div style={styles.searchBarContainer}><SearchBar /></div>
-          <div style={styles.exampleContainer}>
-            <h2 style={styles.exampleHeader}>Examples</h2>
-            {examples}
+      <ApolloProvider client={githubClient}>
+        <div className="App">
+          <div style={styles.searchContainer} className="searchContainer">
+            <div style={styles.logoContainer}><Logo /></div>
+            <div style={styles.searchBarContainer}><SearchBar searchChange={this.searchChange.bind(this)} /></div>
+            <div style={{...styles.exampleContainer, opacity: isEmpty ? 1 : 0}}>
+              <h2 style={styles.exampleHeader}>Examples</h2>
+              {examples}
+            </div>
           </div>
         </div>
-      </div>
+      </ApolloProvider>
     );
   }
 }
@@ -80,7 +103,8 @@ const styles = {
   exampleContainer: {
     marginTop: 20,
     overflow: 'auto',
-    padding: '0 10px'
+    padding: '0 10px',
+    transition: 'all .5s ease'
   },
   exampleHeader: {
     color: Colors.purple
