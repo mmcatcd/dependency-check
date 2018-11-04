@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', sans-serif;
+  color: #525f7f;
+  background-color: #F5F7F9;
+  
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input:focus {
+  outline: none;
+}
+
+h2 {
+  text-align: left;
+  font-size: 24px;
+}
+
+h3 {
+  text-align: left;
+  font-size: 18px;
+  margin: 5px 0px;
+}
+
+p {
+  text-align: left;
+  font-size: 15px;
+  margin: 8px 0px;
+}
+
+a {
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+a:hover {
+  opacity: 1;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
