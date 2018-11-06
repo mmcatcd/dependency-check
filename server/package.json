@@ -4,7 +4,7 @@
   "description": "The server for Dependency Check, a dependency analysis tool.",
   "main": "server.js",
   "scripts": {
-    "start": "node --experimental-modules server.js",
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Michael McAndrew",
@@ -20,5 +20,8 @@
     "graphql-tag": "^2.10.0",
     "mongoose": "^5.3.9",
     "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   }
 }
