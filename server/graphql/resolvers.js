@@ -4,7 +4,12 @@
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello world!'
+    hello: () => 'Hello world!',
+    package: () => {
+      return {
+        name: 'Express'
+      }
+    }
   }
 };
 
