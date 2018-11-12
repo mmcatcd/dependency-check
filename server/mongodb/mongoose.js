@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
 
 // Connect to MongoDB
-exports.connect = (url) => mongoose.connect(
-  url,
-  { useNewUrlParser: true }
-)
-.then(() => console.log("MongoDB Connected to:", mongoose.connection.db.s.databaseName))
-.catch(err => console.log("Couldn't connect to MongoDB: ", err));
+exports.connect = async (url) => {
+  try {
+    await mongoose.connect(
+      url,
+      { useNewUrlParser: true }
+    )
+  } catch(err) {
+    console.log("Couldn't connect to MongoDB: ", err);
+  }
+
+  console.log("MongoDB Connected to:", mongoose.connection.db.s.databaseName);
+}
 
 /**
  * Create.
