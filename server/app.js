@@ -13,15 +13,17 @@ const resolvers = require('./graphql/resolvers'); // Import GraphQL query resolv
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 apolloServer.applyMiddleware({ app });
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/dep-check');
-
 // Console logging
 app.use(morgan('dev'));
 
-// Do a crawl of NPM.
-npmCrawler.crawlPackage('express')
-.then(() => console.log("Finished crawl!"));
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/dep-check')
+.then(() => {
+  // Do a crawl of NPM.
+  console.log("Starting crawl of express...");
+  npmCrawler.crawl('express')
+  .then(() => console.log("Finished crawl!"));
+});
 
 // Successful request response
 app.use(express.Router().get('/', (req, res, next) => {
