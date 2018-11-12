@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const { ApolloServer } = require('apollo-server-express');
+const mongoose = require('./mongodb/mongoose');
+const npmCrawler = require('./npmCrawler');
+
 const morgan = require('morgan');
 
 const typeDefs = require('./graphql/schema'); // Import GraphQL schema
@@ -10,8 +13,15 @@ const resolvers = require('./graphql/resolvers'); // Import GraphQL query resolv
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 apolloServer.applyMiddleware({ app });
 
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/dep-check');
+
 // Console logging
 app.use(morgan('dev'));
+
+// Do a crawl of NPM.
+npmCrawler.crawlPackage('express')
+.then(() => console.log("Finished crawl!"));
 
 // Successful request response
 app.use(express.Router().get('/', (req, res, next) => {
@@ -23,4 +33,4 @@ app.use(express.Router().get('/', (req, res, next) => {
 }));
 
 module.exports = app;
-module.exports.apolloServer = apolloServer;
+module.exports.apolloServer =  apolloServer;
