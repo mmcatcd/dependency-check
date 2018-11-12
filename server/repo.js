@@ -29,26 +29,38 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-exports.getRepo = function(name) {
-  console.log("Getting repo with name: ", name);
+exports.getTopicRepos = function(topic) {
+  console.log("Getting repos with topic: ", topic, "...");
 
-  client.query({
-    query: gql`
-      query {
-        repository(name: "Express", owner: "expressjs") {
-          name
-          description
-          repositoryTopics(last:20) {
-            edges {
-              node {
-                topic {
-                  name
+  const query = gql `
+    query($topic: String!) {
+      search(query: $topic, type:REPOSITORY, first: 10) {
+        edges {
+          node {
+            ... on Repository {
+              name
+              description
+              mergeCommitAllowed
+              repositoryTopics(last:20) {
+                edges {
+                  node {
+                    topic {
+                      name
+                    }
+                  }
                 }
               }
             }
           }
         }
       }
-    `
+    }
+  `;
+
+  client.query({
+    query: query,
+    variables: {
+      topic: topic
+    }
   }).then(result => console.log(result));
 }

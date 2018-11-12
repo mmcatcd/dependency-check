@@ -4,7 +4,7 @@
   "description": "The server for Dependency Check, a dependency analysis tool.",
   "main": "server.js",
   "scripts": {
-    "start": "node --experimental-modules server.js",
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Michael McAndrew",
@@ -14,8 +14,15 @@
     "apollo-client": "^2.4.4",
     "apollo-link-context": "^1.0.9",
     "apollo-link-http": "^1.5.5",
+    "apollo-server-express": "^2.1.0",
+    "express": "^4.16.4",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
+    "mongoose": "^5.3.9",
+    "morgan": "^1.9.1",
     "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   }
 }
