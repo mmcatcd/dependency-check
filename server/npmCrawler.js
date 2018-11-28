@@ -45,10 +45,11 @@ crawlPackage = async (packageName, crawledPackages) => {
   }
 
   // Recursively crawl all dev-dependency packages.
+  /*
   const devDependencies = packageInfo.collected.metadata.devDependencies;
   for (dep in devDependencies) {
     await crawlPackage(dep, crawledPackages);
-  }
+  }*/
 }
 
 /*
