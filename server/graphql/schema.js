@@ -16,6 +16,7 @@ const typeDefs = gql`
 
   type Package {
     name: String!
+    test: String!
   }
 `;
 
