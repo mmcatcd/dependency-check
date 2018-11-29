@@ -25,8 +25,6 @@ crawlPackage = async (packageName, crawledPackages) => {
     // Check if no package was found
     if (packageInfo.code == "NOT_FOUND" || packageInfo.code == "INTERNAL") { return; }
 
-    console.log("Package name: ", packageName);
-
     // Put the repo into the database
     const packageEntry = Package.create(packageInfo);
     await mongoose.create(packageEntry);
@@ -50,6 +48,18 @@ crawlPackage = async (packageName, crawledPackages) => {
   for (dep in devDependencies) {
     await crawlPackage(dep, crawledPackages);
   }*/
+}
+
+module.exports.getPackage = async (packageName) => {
+  // Check if the package is in the database.
+  const result = await mongoose.read(Package.model, { name: packageName });
+
+  if (result == null) {
+    // Grab the package from npm
+    result = await npmQueries.getPackage(packageNameURL);
+  }
+
+  return result;
 }
 
 /*
