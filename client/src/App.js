@@ -7,45 +7,9 @@ import Logo from './components/Logo';
 import SearchBar from './components/SearchBar';
 import Colors from './components/Colors';
 import Example from './components/Example';
+import { getPackage } from './npm/npmQueries';
 
-const tags = ['javascript', 'nodejs', 'express', 'server'];
-
-const exampleData = [
-  {
-    title: "Express",
-    description: "Fast, unopinionated, minimalist web framework for node.",
-    tags: ['javascript', 'nodejs', 'express', 'server'],
-    commit: {
-      author: "dougwilson",
-      date: "2018-10-11T03:50:45Z",
-      description: "4.16.4"
-    }
-  },
-  {
-    title: "SwiftyJSON",
-    description: "The better way to deal with JSON data in Swift.",
-    tags: ['swiftyjson', 'json', 'swift', 'xcode10', 'swift4-2', 
-      'response', 'request', 'carthage', 'cocoapods', 'json-parsing-library',
-      'json-parser', 'json-parsing-swift'],
-    commit: {
-      author: "wrongzigii",
-      date: "2018-09-26T10:03:28Z",
-      description: "Update README.md"
-    }
-  }
-]
-
-const examples = exampleData.map(repo => {
-  return (
-    <Example 
-      tags={tags} 
-      title={repo.title}
-      description={repo.description}
-      commitAuthor={repo.commit.author}
-      commitDate={repo.commit.date}
-      commitDescription={repo.commit.description}
-       />);
-  });
+const exampleData = ['express', 'passport', 'apollo'];
 
 class App extends Component {
   constructor() {
@@ -53,7 +17,24 @@ class App extends Component {
     this.state = {
       searchBar: {
         isEmpty: true
-      }
+      },
+      visualHidden: true,
+      selectedPackage: {},
+      examples: []
+    }
+  }
+
+  async componentDidMount() {
+    exampleData.forEach(async (name) => {
+      const results = await getPackage(name);
+      console.log(results);
+      this.setState(prev => ({ examples: [...prev.examples, results] }));
+    });
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.searchBar.isEmpty !== this.state.searchBar.isEmpty) {
+      this.setState({ visualHidden: this.state.searchBar.isEmpty });
     }
   }
 
@@ -65,19 +46,56 @@ class App extends Component {
     }
   }
 
+  selectPackage(selectedPackage) {
+    this.setState({ 
+      ...this.state,
+      selectedPackage: selectedPackage, 
+      visualHidden: false });
+  }
+
   render() {
-    const { isEmpty } = this.state.searchBar;
+    const { visualHidden } = this.state;
+    //const { isEmpty } = this.state.searchBar;
+
+    const examples = this.state.examples.map(repo => {
+      const meta = repo.collected.metadata;
+      if (meta !== undefined && visualHidden) {
+        return (
+          <Example
+            package={repo}
+            tags={meta.keywords} 
+            title={meta.name}
+            description={meta.description}
+            commitAuthor={meta.author.name}
+            commitDate={meta.date}
+            commitDescription={meta.version}
+            selected={this.selectPackage.bind(this)}
+          />);
+      }
+
+      return <div />;
+    });
+
+    const displayExamples = () => {
+      if (visualHidden) {
+        return (
+          <div style={styles.exampleContainer}>
+            <h2 style={styles.exampleHeader}>Examples</h2>
+            {examples}
+          </div>
+        );
+      }
+
+      return <div />;
+    }
 
     return (
       <ApolloProvider client={githubClient}>
         <div className="App">
           <div style={styles.searchContainer} className="searchContainer">
-            <div style={styles.logoContainer}><Logo /></div>
-            <div style={styles.searchBarContainer}><SearchBar searchChange={this.searchChange.bind(this)} /></div>
-            <div style={{...styles.exampleContainer, opacity: isEmpty ? 1 : 0}}>
-              <h2 style={styles.exampleHeader}>Examples</h2>
-              {examples}
-            </div>
+            <div style={styles.logoContainer}><Logo title="Dependency Check" subtitle="npm" /></div>
+            <div style={styles.searchBarContainer}><SearchBar searchChange={this.searchChange.bind(this)} placeholder="Search for npm dependency..." /></div>
+            {displayExamples()}
           </div>
         </div>
       </ApolloProvider>
