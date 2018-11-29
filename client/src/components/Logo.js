@@ -6,7 +6,7 @@ class Logo extends Component {
     return(
       <div style={styles.container}>
         <img src={logo} alt="logo" style={styles.logo} />
-        <span style={styles.text}>Dependency Check</span>
+        <span style={styles.text}>{this.props.title}</span>
       </div>
     )
   }
