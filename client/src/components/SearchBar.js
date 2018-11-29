@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Colors from './Colors';
-import { SearchRepo } from '../graphql/queries/GithubQueries';
+import SearchResults from '../npm/SearchResults';
 
 class SearchBar extends Component {
   constructor() {
@@ -17,8 +17,6 @@ class SearchBar extends Component {
     const { value } = event.target
 
     this.props.searchChange(value); // Callback
-
-    console.log(this.state.search.text);
 
     if (value !== "") {
       this.setState({
@@ -47,15 +45,15 @@ class SearchBar extends Component {
             type="text" 
             onChange={this.checkSearchText.bind(this)} 
             className="searchBar" 
-            placeholder="Search for a dependency..." 
+            placeholder={this.props.placeholder}
             style={{
               ...styles.searchBar, 
               borderRadius: isEmpty ? 100 : 10, 
               borderBottomLeftRadius: isEmpty ? 100 : 0, 
               borderBottomRightRadius: isEmpty ? 100 : 0
             }} />
-          <div style={{...styles.results, height: isEmpty ? 0 : 150}}>
-            <SearchRepo repo={this.state.search.text} />
+          <div style={{...styles.results, height: isEmpty ? 0 : '100%'}}>
+            <SearchResults results={this.state.search.text} />
           </div>
         </form>
       </div>
@@ -89,7 +87,6 @@ const styles = {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     top: -10,
-    transitionDelay: '0.2s',
     transitionProperty: 'all',
     transitionDuration: '.15s',
     overflow: 'hidden'
