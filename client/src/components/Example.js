@@ -37,16 +37,16 @@ class Example extends Component {
         onMouseOver={() => this.setState({container: { isHovered: true }})}
         onMouseLeave={() => this.setState({container: { isHovered: false }})}>
         <div style={styles.contentContainer}>
-          <a href="/"
-            onMouseOver={() => this.setState({link: { isHovered: true}})}
-            onMouseLeave={() => this.setState({link: { isHovered: false }})}>
-            <h3 style={{...styles.title, opacity: link.isHovered ? 1 : 0.8}}>
-              {this.props.title}
-            </h3>
-          </a>
-          <p style={styles.description}>Fast, unopinionated, minimalist web framework for node.</p>
+          <h3 
+            style={{...styles.title, opacity: link.isHovered ? 1 : 0.8, cursor: link.isHovered ? 'pointer' : 'auto'}}
+            onMouseOver={() => this.setState({link: { isHovered: true }})}
+            onMouseLeave={() => this.setState({link: { isHovered: false }})}
+            onClick={() => this.props.selected(this.props.repo)}>
+            {this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1)}
+          </h3>
+          <p style={styles.description}>{this.props.description}</p>
           {tagElements}
-          <p style={styles.commit}><strong>{this.props.commitAuthor}</strong> {Moment(date).fromNow()} • 4.16.4</p>
+          <p style={styles.commit}><strong>{this.props.commitAuthor}</strong> {Moment(date).fromNow()} • {this.props.commitDescription}</p>
         </div>
       </div>
     )
