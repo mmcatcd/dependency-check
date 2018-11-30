@@ -1,13 +1,41 @@
 const npmQueries = require('./npmQueries');
 const mongoose = require('./mongodb/mongoose');
 const Package = require('./mongodb/models/package');
+const Crawl = require('./mongodb/models/crawl');
 
 crawl = async (packageName) => {
-  let crawledPackages = [];
-  await crawlPackage(packageName, crawledPackages);
+  // Check if crawl results exists in the database for the package
+  const dbCrawl = await mongoose.read(Crawl.model, { packageName: packageName });
+
+  if (dbCrawl != null) {
+    return dbCrawl.crawl;
+  } else {
+    let crawledPackages = [];
+    let crawlResults = { nodes: [], links: [] }
+    let group = 0;
+
+    await crawlPackage(packageName, crawledPackages, crawlResults, group);
+    const crawlMongo = Crawl.create(packageName, crawlResults);
+    await mongoose.create(crawlMongo);
+
+    return crawlResults;
+  }
 }
 
-crawlPackage = async (packageName, crawledPackages) => {
+crawlPackage = async (packageName, crawledPackages, crawlResults, group) => {
+  // Add to nodes
+  let isUnique = true;
+  crawlResults.nodes.map((node) => { 
+    if (node.id == packageName) isUnique = false; 
+  });
+
+  if (isUnique) {
+    crawlResults.nodes.push({
+      id: packageName,
+      group: group
+    });
+  }
+
   // Check if package has already been crawled to prevent loops.
   if (crawledPackages.includes(packageName)) { return; }
 
@@ -39,7 +67,12 @@ crawlPackage = async (packageName, crawledPackages) => {
   // Recursively crawl all dependency packages.
   const dependencies = packageInfo.collected.metadata.dependencies;
   for (dep in dependencies) {
-      await crawlPackage(dep, crawledPackages);
+      crawlResults.links.push({
+        source: packageName,
+        target: dep
+      });
+
+      await crawlPackage(dep, crawledPackages, crawlResults, group++);
   }
 
   // Recursively crawl all dev-dependency packages.
@@ -61,11 +94,6 @@ module.exports.getPackage = async (packageName) => {
 
   return result;
 }
-
-/*
-const sleep = (millis) => {
-  return new Promise(resolve => setTimeout(resolve, millis));
-}*/
 
 module.exports.crawlPackage = crawlPackage;
 module.exports.crawl = crawl;
