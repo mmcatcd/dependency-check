@@ -18,10 +18,10 @@ class Example extends Component {
 
   render() {
     const { container, link } = this.state;
-    const { tags } = this.props;
-    const date = new Date(this.props.commitDate)
+    const meta = this.props.package.collected.metadata;
+    const date = new Date(meta.date)
 
-    const tagElements = tags !== undefined ? tags.map(name => {
+    const tagElements = meta.keywords !== undefined ? meta.keywords.map(name => {
       return(
         <Tag>{name}</Tag>
       );
@@ -41,12 +41,12 @@ class Example extends Component {
             style={{...styles.title, opacity: link.isHovered ? 1 : 0.8, cursor: link.isHovered ? 'pointer' : 'auto'}}
             onMouseOver={() => this.setState({link: { isHovered: true }})}
             onMouseLeave={() => this.setState({link: { isHovered: false }})}
-            onClick={() => this.props.selected(this.props.repo)}>
-            {this.props.title.charAt(0).toUpperCase() + this.props.title.slice(1)}
+            onClick={() => this.props.selected(this.props.package)}>
+            {meta.name.charAt(0).toUpperCase() + meta.name.slice(1)}
           </h3>
-          <p style={styles.description}>{this.props.description}</p>
+          <p style={styles.description}>{meta.description}</p>
           {tagElements}
-          <p style={styles.commit}><strong>{this.props.commitAuthor}</strong> {Moment(date).fromNow()} • {this.props.commitDescription}</p>
+          <p style={styles.commit}><strong>{meta.author.name}</strong> {Moment(date).fromNow()} • {meta.version}</p>
         </div>
       </div>
     )
