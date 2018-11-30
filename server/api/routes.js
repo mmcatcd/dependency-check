@@ -5,10 +5,8 @@ const npmCrawler = require('../npmCrawler');
 router.get('/crawl/:name', (req, res, next) => {
   const name = req.params.name;
   npmCrawler.crawl(name)
-  .then((json) => {
-    res.status(200).json({
-      message: "Success for package: " + json.accepts
-    });
+  .then((results) => {
+    res.status(200).json({results});
   });
 });
 
