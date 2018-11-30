@@ -7,6 +7,7 @@
     "apollo-client": "^2.4.4",
     "apollo-link-context": "^1.0.9",
     "apollo-link-http": "^1.5.5",
+    "d3": "^5.7.0",
     "dotenv": "^6.1.0",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
