@@ -9,6 +9,8 @@ import Colors from './components/Colors';
 import Example from './components/Example';
 import { getPackage } from './npm/npmQueries';
 
+import PackageVisualiser from './components/PackageVisualiser';
+
 const exampleData = ['express', 'passport', 'apollo'];
 
 class App extends Component {
@@ -19,7 +21,7 @@ class App extends Component {
         isEmpty: true
       },
       visualHidden: true,
-      selectedPackage: {},
+      selectedPackage: null,
       examples: []
     }
   }
@@ -34,7 +36,7 @@ class App extends Component {
 
   componentDidUpdate(_, prevState) {
     if (prevState.searchBar.isEmpty !== this.state.searchBar.isEmpty) {
-      this.setState({ visualHidden: this.state.searchBar.isEmpty });
+      this.setState({ ...this.state, visualHidden: this.state.searchBar.isEmpty });
     }
   }
 
@@ -55,7 +57,6 @@ class App extends Component {
 
   render() {
     const { visualHidden } = this.state;
-    //const { isEmpty } = this.state.searchBar;
 
     const examples = this.state.examples.map(repo => {
       const meta = repo.collected.metadata;
@@ -63,13 +64,7 @@ class App extends Component {
         return (
           <Example
             package={repo}
-            tags={meta.keywords} 
-            title={meta.name}
-            description={meta.description}
-            commitAuthor={meta.author.name}
-            commitDate={meta.date}
-            commitDescription={meta.version}
-            selected={this.selectPackage.bind(this)}
+            selected={this.selectPackage.bind(this)} 
           />);
       }
 
@@ -89,6 +84,18 @@ class App extends Component {
       return <div />;
     }
 
+    const displayVisualisation = () => {
+      if (!visualHidden && this.state.selectedPackage != null) {
+        return (
+          <div>
+            <PackageVisualiser package={this.state.selectedPackage} />
+          </div>
+        )
+      }
+
+      return <div />;
+    }
+
     return (
       <ApolloProvider client={githubClient}>
         <div className="App">
@@ -96,6 +103,7 @@ class App extends Component {
             <div style={styles.logoContainer}><Logo title="Dependency Check" subtitle="npm" /></div>
             <div style={styles.searchBarContainer}><SearchBar searchChange={this.searchChange.bind(this)} placeholder="Search for npm dependency..." /></div>
             {displayExamples()}
+            {displayVisualisation()}
           </div>
         </div>
       </ApolloProvider>
