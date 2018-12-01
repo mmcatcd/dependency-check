@@ -8,7 +8,7 @@ exports.connect = async (url) => {
       { useNewUrlParser: true }
     )
   } catch(err) {
-    console.log("Couldn't connect to MongoDB: ", err);
+    return err;
   }
 
   console.log("MongoDB Connected to:", mongoose.connection.db.s.databaseName);

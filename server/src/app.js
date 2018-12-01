@@ -5,6 +5,10 @@ const routes = require('./api/routes');
 
 const morgan = require('morgan');
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // Console logging
 app.use(morgan('dev'));
 
@@ -26,8 +30,24 @@ app.use((req, res, next) => {
 app.use('/api', routes);
 
 // Connect to MongoDB
-mongoose.connect('mongodb://cs3012-database:27017/dep-check')
-.then(() => console.log("Connected to Mongo db."));
+mongoose.connect('mongodb://db:27017/dep-check')
+.then(async (err) => {
+  if (err) {
+    console.log("Couldn't connect. Waiting 10 seconds...")
+    await sleep(10000)
+    console.log("Trying again...")
+    mongoose.connect('mongodb://db:27017/dep-check')
+    .then((err) => {
+      if (err) {
+        console.log("Failed second time around too :(")
+      } else {
+        console.log("Connected to MongoDB!")
+      }
+    })
+  } else {
+    console.log("Connected to MongoDB!")
+  }
+});
 
 // Successful request response
 app.use(express.Router().get('/', (req, res, next) => {
