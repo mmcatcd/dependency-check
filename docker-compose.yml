@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  frontend:
+    build: ./client
+    volumes:
+      - ./client:/usr/src/app
+    ports:
+      - 3000:3000
+  backend:
+    build: ./server
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - 8000:8000
+    links:
+      - db
+  db:
+    image: mongo
+    volumes:
+      - ./db:/data/db
+    ports:
+      - 27017:27017
