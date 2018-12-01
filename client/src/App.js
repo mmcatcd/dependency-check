@@ -55,6 +55,11 @@ class App extends Component {
       visualHidden: false });
   }
 
+  async selectPackageFromName(selectedPackage) {
+    const results = await getPackage(selectedPackage);
+    this.setState(prev => ({ selectedPackage: results }));
+  }
+
   render() {
     const { visualHidden } = this.state;
 
@@ -101,7 +106,7 @@ class App extends Component {
         <div className="App">
           <div style={styles.searchContainer} className="searchContainer">
             <div style={styles.logoContainer}><Logo title="Dependency Check" subtitle="npm" /></div>
-            <div style={styles.searchBarContainer}><SearchBar searchChange={this.searchChange.bind(this)} placeholder="Search for npm dependency..." /></div>
+            <div style={styles.searchBarContainer}><SearchBar setResult={this.selectPackageFromName.bind(this)} searchChange={this.searchChange.bind(this)} placeholder="Search for npm dependency..." /></div>
             {displayExamples()}
             {displayVisualisation()}
           </div>

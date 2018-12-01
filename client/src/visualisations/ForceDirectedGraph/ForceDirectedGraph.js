@@ -4,6 +4,9 @@ import * as d3 from 'd3';
 class ForceDirectedGraph extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      nodeColors: []
+    }
     this.createForceDirectedGraph = this.createForceDirectedGraph.bind(this);
   }
 
@@ -25,9 +28,19 @@ class ForceDirectedGraph extends Component {
     const width = this.props.width;
     const height = this.props.height;
 
+    /*
     const color = () => {
       const scale = d3.scaleOrdinal(d3.schemeCategory10);
       return d => scale(d.group);
+    }*/
+
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     }
 
     const drag = simulation => {
@@ -70,6 +83,15 @@ class ForceDirectedGraph extends Component {
       .enter().append("line")
         .attr("stroke-width", this.props.stroke !== undefined ? this.props.stroke : 2);
 
+    const nodeColors = [];
+    for (let i = 0; i < nodes.length; i++) {
+      const randColor = getRandomColor();
+      nodeColors.push(randColor);
+    }
+
+    this.setState({ nodeColors: nodeColors });
+    let nodeColorIndex = 0;
+
     const node = svg.append("g")
         .attr("stroke", "#fff")
         .attr("stroke-width", 1.5)
@@ -77,7 +99,7 @@ class ForceDirectedGraph extends Component {
       .data(nodes)
       .enter().append("circle")
         .attr("r", this.props.radius !== undefined ? this.props.radius : 10)
-        .attr("fill", color())
+        .attr("fill", () => {return nodeColors[nodeColorIndex++]})
         .call(drag(simulation));
 
     node.append("title")
@@ -97,8 +119,34 @@ class ForceDirectedGraph extends Component {
   }
 
   render() {
-    return <svg ref={refNode => this.refNode = refNode}
-    width={this.props.width} height={this.props.height}></svg>
+
+    /*
+    const examples = this.state.examples.map(repo => {
+      const meta = repo.collected.metadata;
+      if (meta !== undefined && visualHidden) {
+        return (
+          <Example
+            package={repo}
+            selected={this.selectPackage.bind(this)} 
+          />);
+      }
+
+      return <div />;
+    });*/
+    const nodeList = this.state.nodeColors.map((nodeColor, index) => {
+      return (<li key={nodeColor.uniqueId} style={{color: nodeColor}}>{this.props.data.nodes[index].id}</li>);
+    });
+
+    return (
+      <div>
+        <svg 
+          ref={refNode => this.refNode = refNode}
+          width={this.props.width} 
+          height={this.props.height}>
+        </svg>
+        <ul style={{columns: 5, fontWeight: 500, lineHeight: '1.5em'}}>{nodeList}</ul>
+      </div>
+    )
   }
 }
 

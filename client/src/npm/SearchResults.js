@@ -21,7 +21,7 @@ class SearchResults extends Component {
   render() {
     const { packages } = this.state;
     const searchResults = packages.results !== undefined ? packages.results.map((result) => 
-      <SearchResult title={result.package.name} description={result.package.description} />
+      <SearchResult setResult={this.props.setResult} title={result.package.name} description={result.package.description} />
     ) : null;
 
     return (

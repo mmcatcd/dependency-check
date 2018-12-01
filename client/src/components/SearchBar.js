@@ -53,7 +53,7 @@ class SearchBar extends Component {
               borderBottomRightRadius: isEmpty ? 100 : 0
             }} />
           <div style={{...styles.results, height: isEmpty ? 0 : '100%'}}>
-            <SearchResults results={this.state.search.text} />
+            <SearchResults setResult={this.props.setResult} results={this.state.search.text} />
           </div>
         </form>
       </div>

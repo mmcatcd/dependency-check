@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import RepoOverview from './RepoOverview';
-import ForceDirectedGraph from '../visualisations/ForceDirectedGraph/ForceDirectedGraph';
-import DependencyWheel from '../visualisations/DependencyWheel';
+import VisualDependencies from './VisualDependencies';
 
 class PackageVisualiser extends Component {
   constructor() {
@@ -53,28 +52,26 @@ class PackageVisualiser extends Component {
       });
   }
 
-  displayGraph() {
-    if (this.state.data == null) {
+  displayVisualDependencies() {
+    if (this.state.chord == null || this.state.data == null) {
       return;
-    } else {
-      return <ForceDirectedGraph width={800} height={800} data={this.state.data} />
-    }
-  }
+    }else {
+      const visualDepData = {
+        data: this.state.data,
+        chord: this.state.chord
+      }
 
-  displayWheel() {
-    if (this.state.chord == null) {
-      return;
-    } else {
-      return <DependencyWheel data={this.state.chord} />
+      return <VisualDependencies data={visualDepData} package={this.props.package} />;
     }
   }
 
   render() {
+    
+
     return(
       <div>
         <RepoOverview package={this.props.package} />
-        {this.displayWheel()}
-        {this.displayGraph()}
+        {this.displayVisualDependencies()}
       </div>
     )
   }

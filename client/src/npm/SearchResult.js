@@ -5,7 +5,10 @@ class SearchResult extends Component {
   constructor() {
     super();
     this.state = {
-      isHovered: false
+      isHovered: false,
+      title: {
+        isHovered: false
+      }
     }
   }
 
@@ -19,7 +22,10 @@ class SearchResult extends Component {
         }}
         onMouseOver={() => {this.setState({ isHovered: true }); console.log("isHovered=true")}}
         onMouseLeave={() => {this.setState({ isHovered: false }); console.log("isHovered=false")}}>
-        <h3 style={styles.title}>{this.props.title}</h3>
+        <h3 style={{...styles.title, cursor: this.state.title.isHovered ? 'pointer' : 'none'}}
+          onMouseOver={() => { this.setState({...this.state, title: { isHovered: true }}) }}
+          onMouseLeave={() => { this.setState({...this.state, title: { isHovered: false }}) }}
+          onClick={() => this.props.setResult(this.props.title)}>{this.props.title}</h3>
         <p style={styles.description}>{this.props.description}</p>
       </li>
     );
