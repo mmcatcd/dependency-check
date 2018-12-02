@@ -26,6 +26,7 @@ Run:
 ```
 $ docker-compose up
 ```
+It will take a couple of minutes for the containers to build, install and run. Docker has a lot to do :) 
 
 To access the application, navigate to ``http://localhost:3000`` in the browser.
 
@@ -35,7 +36,7 @@ To access the application, navigate to ``http://localhost:3000`` in the browser.
 
 ## About The Project
 
-### Architecture
+### Architecture
 
 The project is split into three main components:
 
@@ -65,7 +66,7 @@ The frontend can then query NPMCrawler to get the graph for any package in NPM. 
 
 I chose MongoDB for the database as it's great for large quantities of schema free data and is easy to Dockerise. It also interacts very well with Node js and there is a large body of resources available for getting Node and Mongo containers to interact with each other.
 
-### Frontend
+### Frontend
 
 I decided to use React because I'm a big fan of the virtual DOM it provides and generally it provides an easy way to quickly mock up web applications.
 
